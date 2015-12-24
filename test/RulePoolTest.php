@@ -22,8 +22,8 @@ class RulePoolTest extends PHPUnit_Framework_TestCase {
 
     function testApplyRules() {
         $a = [
-            ["/\d{1,2}/", function($matches) { return $matches[0]; }],
-            ["/abc/", function($matches) { return $matches[0]; }]
+            ["/(\d{1,2})/", function($matches) { return $matches[0]; }],
+            ["/(abc)/", function($matches) { return $matches[0]; }]
         ];
         $this->rulePool->addRules($a);
 

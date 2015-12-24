@@ -69,7 +69,7 @@ class EventParser {
             ],
             [
                 "/${D}\.?${N}+${D}\.${D}/",
-                function($m) { return [[$m[1], $m[0], null], [$m[3], $m[1], null]]; }
+                function($m) { return [[$m[2], $m[0], null], [$m[2], $m[1], null]]; }
             ]
         ];
     }

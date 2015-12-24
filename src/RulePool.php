@@ -24,6 +24,7 @@ class RulePool {
                 $succeeded = 1 == preg_match($rule, $dateChunk, $matches);
 
                 if ($succeeded) {
+                    array_shift($matches);
                     return $extractor($matches);
                 }
                 return null;

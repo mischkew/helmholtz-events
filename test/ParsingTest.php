@@ -15,25 +15,25 @@ class ParsingTest extends PHPUnit_Framework_TestCase {
 
     // test cases to detect whether a datestring shows from and to dates or only a single day
     public $stringHasMultipleDates = [
-        ["1.2", false],
-        ["1.2 oder", false],
-        ["Bis 1.2", false],
-        ["01.02.2015", false],
-        ["1.4.15", false],
-        ["3/2/15", false],
-        ["03/2/15", false],
-        ["16/17.2.15", true],
-        ["16./17.2.15", true],
-        ["16-17.4", true],
-        ["16.-17.4", true],
-        ["16.-17.4.15", true],
-        ["16.-17.4.2015", true],
-        ["16.3 - 17.4", true],
-        ["16.3. - 17.3.15", true],
-        ["17. oder 18.4", true],
-        ["20.3. bis 22.3.", true],
-        ["31.12. bis 03.1", true],
-        ["15.13.2015 bis 12.12.16", true]
+        ["1.2", false, null],
+        ["1.2 oder", false, null],
+        ["Bis 1.2", false, null],
+        ["01.02.2015", false, null],
+        ["1.4.15", false, null],
+        ["3/2/15", false, null],
+        ["03/2/15", false, null],
+        ["16/17.2.15", true, [["2","16","15"], ["2","17","15"]]],
+        ["16./17.2.15", true, [["2","16","15"], ["2","17","15"]]],
+        ["16-17.4", true, [["4", "16", null], ["4", "17", null]]],
+        ["16.-17.4", true, [["4", "16", null], ["4", "17", null]]],
+        ["16.-17.4.15", true, [["4", "16", "15"], ["4", "17", "15"]]],
+        ["16.-17.4.2015", true, [["4", "16", "2015"], ["4", "17", "2015"]]],
+        ["16.3 - 17.4", true, [["3","16",null], ["4", "17", null]]],
+        ["16.3. - 17.3.15", true, [["3", "16",null],["3", "17", "15"]]],
+        ["17. oder 18.4", true, [["4", "17", null], ["4", "18", null]]],
+        ["20.3. bis 22.3.", true, [["3", "20", null],["3","22", null]]],
+        ["31.12. bis 03.1", true, [["12", "31", null],["1","03", null]]],
+        ["15.13.2015 bis 12.12.16", true, [["13", "15", "2015"],["12", "12", "16"]]]
     ];
 
     public function generalAssert($func, $testTuples) {
@@ -161,6 +161,18 @@ class ParsingTest extends PHPUnit_Framework_TestCase {
             $this->assertEquals(
                 (bool) $p->multiplePool->applyRules($tuple[0]),
                 $tuple[1],
+                $tuple[0]
+            );
+        }
+    }
+
+    public function testRulePoolMatchesMultiple() {
+        $p = new EventParser();
+
+        foreach ($this->stringHasMultipleDates as $tuple) {
+            $this->assertEquals(
+                $p->multiplePool->applyRules($tuple[0]),
+                $tuple[2],
                 $tuple[0]
             );
         }
