@@ -1,0 +1,25 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Event\\": [
+        "src",
+        "tests"
+      ]
+    }
+  },
+  "require-dev": {
+    "phpunit\/phpunit": "5.1.*"
+  },
+  "require": {
+    "anahkiasen\/underscore-php": "^2.0",
+    "phpoffice\/phpexcel": "dev-develop"
+  },
+  "authors": [
+    {
+      "email": "sven.mkw@gmail.com",
+      "name": "Sven Mkw"
+    }
+  ],
+  "description": "Reading Excel files of daily appointments",
+  "name": "mkw\/fehse-reader"
+}
