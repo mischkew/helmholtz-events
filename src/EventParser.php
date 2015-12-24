@@ -2,6 +2,7 @@
 
 namespace Event;
 
+use Underscore\Types\Arrays;
 
 class EventParser {
     public static $REGEX = [
@@ -10,6 +11,23 @@ class EventParser {
         // backreference not working
         "dayAndMonthAndYear" => "/(?!00)(\d{1,2})(\.|\/)(?!00)(\d{1,2})(\.|\/)(\d{1,4})/"
     ];
+
+    public static $months = [
+        "Januar",
+        "Februar",
+        "März",
+        "April",
+        "Mai",
+        "Juni",
+        "Juli",
+        "August",
+        "September",
+        "Oktober",
+        "Novemeber",
+        "Dezember"
+    ];
+
+
 
     public $multiplePool;
     public $singlePool;
@@ -81,6 +99,40 @@ class EventParser {
         // apply default rules
         $this->singlePool->addRules($this->getDefaultSingleRules());
         $this->multiplePool->addRules($this->getDefaultMultipleRules());
+    }
+
+    public function isMultipleDays($dateChunk) {
+        return (bool) $this->multiplePool->applyRules($dateChunk);
+    }
+
+    public function getSingleDay($dateChunk) {
+        return $this->singlePool->applyRules($dateChunk);
+    }
+
+    public function getMultipleDays($dateChunk) {
+        return $this->multiplePool->applyRules($dateChunk);
+    }
+
+    public static function isMonth($dateChunk) {
+        return Arrays::matchesAny(self::$months, function($month) use (&$dateChunk) {
+            return 1 == preg_match("/${month}\s(\d+)/", $dateChunk);
+        });
+    }
+
+    public static function getYear($dateChunk) {
+        $matches = null;
+        preg_match("/\d+/", $dateChunk, $matches);
+        return $matches[0];
+    }
+
+    public static function findFirstMonth($events) {
+        return Arrays::from($events)
+                    ->pluck("A")
+                    ->find(function($date) {
+                        return Arrays::matchesAny(self::$months, function($month) use (&$date) {
+                            return 1 == preg_match("/${month}\s\d+/", $date);
+                        });
+                    });
     }
 
     public static function appendLeadingZero($dateChunk) {

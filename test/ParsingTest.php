@@ -190,5 +190,27 @@ class ParsingTest extends PHPUnit_Framework_TestCase {
         }
     }
 
+    public function testFindFirstMonth() {
+        $events = [
+            ["A" => null],
+            ["A" => 123],
+            ["A" => "Monat 15"],
+            ["A" => "August 2015"],
+            ["A" => "Sep 15"],
+            ["A" => null]
+        ];
+
+        $this->assertEquals(EventParser::findFirstMonth($events), "August 2015");
+    }
+
+    public function testIsMonth() {
+        $this->assertEquals(EventParser::isMonth("September 2015"), true);
+        $this->assertFalse(EventParser::isMonth("STUPID 124"));
+    }
+
+    public function testGetYear() {
+        $this->assertEquals(EventParser::getYear("September 2015"), "2015");
+    }
+
 
 }
