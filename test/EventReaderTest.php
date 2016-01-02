@@ -278,4 +278,23 @@ class EventReaderTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($event);
     }
 
+    public function testReadEvents() {
+        $eventLines = [
+            [ "A" => "" ],
+            [ "A" => "August 2016"],
+            [ "A" => ""],
+            [ "A" => "1.4", "B" => "", "C" => "12.00 Uhr", "D" => "Some Title" ],
+            [ "A" => "2.4", "B" => "5.4", "C" => "12.00 Uhr", "D" => "Some Title" ],
+            [ "A" => "", "B" => "", "C" => "14.00 Uhr", "D" => "Some Tilte Again" ]
+        ];
+
+        $events = $this->reader->readEvents($eventLines);
+        $this->assertEquals(count($events), 2);
+
+        $this->assertEquals($events[0]->date->getFrom(), "04/01/2016");
+        $this->assertEquals($events[1]->date->getFrom(), "04/02/2016");
+        $this->assertEquals($events[1]->date->getTo(), "04/05/2016");
+
+        $this->assertEquals(count($events[1]->times), 2);
+    }
 }

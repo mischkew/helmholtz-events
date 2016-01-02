@@ -107,7 +107,7 @@ class EventReader {
         $groups = $this->groupEvents($cleaned);
 
         return Arrays::from($groups)
-            ->each($this->groupToEvent)
+            ->each(function($group) { return $this->groupToEvent($group); })
             ->filter(function($value) { return $value != null; })
             ->obtain();
     }
