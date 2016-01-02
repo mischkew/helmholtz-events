@@ -261,4 +261,21 @@ class EventReaderTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($event->date->getTo(), "01/04/2016");
     }
 
+    public function testGroupToEventIgnore() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "",
+                    "B" => "  4.1  ",
+                    "C" => "18.00 Uhr",
+                    "D" => "Informationsabend"
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertNull($event);
+    }
+
 }
