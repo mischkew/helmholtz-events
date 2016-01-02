@@ -101,4 +101,87 @@ class EventReader {
 
         return $groups;
     }
+
+    public function readEvents($events) {
+        $cleaned = $this->cleanEvents($events);
+        $groups = $this->groupEvents($cleaned);
+
+        return Arrays::from($groups)
+            ->each($this->groupToEvent)
+            ->filter(function($value) { return $value != null; })
+            ->obtain();
+    }
+
+    public function joinDate($dateChunk, $globalYear) {
+        $month = EventParser::appendLeadingZero($dateChunk[0]);
+        $day = EventParser::appendLeadingZero($dateChunk[1]);
+        $year = EventParser::fullYearFrom($dateChunk[2] ? $dateChunk[2] : $globalYear);
+
+        return "$month/$day/$year";
+    }
+
+    public function getToYear($fromChunk, $toChunk, $globalYear) {
+        if ((int) $fromChunk[0] > (int) $toChunk[0]) {
+            return $globalYear + 1;
+        }
+
+        return $globalYear;
+    }
+
+
+
+    /**
+     * Transform a group of lines into a single event object
+     */
+    public function groupToEvent($eventGroup) {
+        $group = $eventGroup["lines"];
+        $year = $eventGroup["year"];
+        $mainLine = $group[0];
+
+        $event = new Event();
+        $eventDate = new EventDate();
+
+        // Check if FROM-cell determines multiple days
+        if ($this->parser->isMultipleDays($mainLine["A"])) {
+            $dates = $this->parser->getMultipleDays($mainLine["A"]);
+            $from = $this->joinDate($dates[0], $year);
+            $to = $this->joinDate($dates[1], $this->getToYear($dates[0], $dates[1], $year));
+            $eventDate->makeMultipleDays($from, $to);
+        }
+        // Check if FROM-cell determines one day
+        else if ($this->parser->isSingleDay($mainLine["A"])) {
+            $dateFrom = $this->parser->getSingleDay($mainLine["A"]);
+            $from = $this->joinDate($dateFrom, $year);
+            $eventDate->setFrom($from);
+
+            // Check if TO-cell determines one day
+            if ($this->parser->isSingleDay($mainLine["B"])) {
+                $dateTo = $this->parser->getSingleDay($mainLine["B"]);
+                $to = $this->joinDate($dateTo, $this->getToYear($dateFrom, $dateTo, $year));
+                $eventDate->setTo($to);
+            }
+            // this event is happening on one day only
+            else {
+                $eventDate->makeSingleDay();
+            }
+        }
+        // ignore this group
+        else {
+            return null;
+        }
+
+        $event->setDate($eventDate);
+
+        // Check if TO-cell contains extra information
+        foreach ($group as $line) {
+            if (strlen($line["B"]) > 0 && !$this->parser->isSingleDay($line["B"])) {
+                $event->addExtra($line["B"]);
+            }
+
+            $event->addTime($line["C"]);
+            $event->addTitle($line["D"]);
+        }
+
+        return $event;
+    }
 }

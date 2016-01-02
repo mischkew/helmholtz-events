@@ -113,33 +113,33 @@ class ParsingTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-    public function testIsSingleDay() {
-        $testSingle = [
-            ["1.2", true],
-            ["1.2 oder", true],
-            ["Bis 1.2", true],
-            ["01.02.2015", true],
-            ["1.4.15", true],
-            ["3/2/15", true],
-            ["03/2/15", true],
-            ["16/17.2.15", true],
-            ["16./17.12.15", true],
-            ["16-17.4", true],
-            ["16.-17.4", true],
-            ["16.-17.4.15", true],
-            ["16.-17.4.2015", true],
-            ["16.3 - 17.4", true],
-            ["16.3. - 17.3.15", true],
-            ["17. oder 18.4", true],
-            ["20.3. bis 22.3.", true],
-            ["31.12. bis 03.1", true]
-        ];
+    // public function testIsSingleDay() {
+    //     $testSingle = [
+    //         ["1.2", true],
+    //         ["1.2 oder", true],
+    //         ["Bis 1.2", true],
+    //         ["01.02.2015", true],
+    //         ["1.4.15", true],
+    //         ["3/2/15", true],
+    //         ["03/2/15", true],
+    //         ["16/17.2.15", true],
+    //         ["16./17.12.15", true],
+    //         ["16-17.4", true],
+    //         ["16.-17.4", true],
+    //         ["16.-17.4.15", true],
+    //         ["16.-17.4.2015", true],
+    //         ["16.3 - 17.4", true],
+    //         ["16.3. - 17.3.15", true],
+    //         ["17. oder 18.4", true],
+    //         ["20.3. bis 22.3.", true],
+    //         ["31.12. bis 03.1", true]
+    //     ];
 
-        $this->generalAssert(
-            "Event\\EventParser::isSingleDay",
-            $testSingle
-        );
-    }
+    //     $this->generalAssert(
+    //         "Event\\EventParser::isSingleDay",
+    //         $testSingle
+    //     );
+    // }
 
     public function testAppendLeadingZero() {
         $this->assertEquals(EventParser::appendLeadingZero("1"), "01");

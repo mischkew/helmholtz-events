@@ -57,4 +57,208 @@ class EventReaderTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(count($groups[2]["lines"]), 1);
         $this->assertEquals(count($groups[3]["lines"]), 1);
     }
+
+    public function testGroupToEventSingleDay() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "12.1. (Di)",
+                    "B" => "    ",
+                    "C" => "18.00 Uhr",
+                    "D" => "Informationsabend"
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertTrue($event->date->isSingleDay());
+        $this->assertEquals($event->date->getFrom(), "01/12/2015");
+        $this->assertEquals(count($event->extras), 0);
+        $this->assertEquals(count($event->times), 1);
+        $this->assertEquals($event->times[0], "18.00 Uhr");
+        $this->assertEquals(count($event->titles), 1);
+        $this->assertEquals($event->titles[0], "Informationsabend");
+    }
+
+    public function testGroupToEventSingleDayWithExtras() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "12.1. (Di)",
+                    "B" => "9EM, 9A      ",
+                    "C" => "   18.00 Uhr",
+                    "D" => "Informationsabend   "
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertTrue($event->date->isSingleDay());
+        $this->assertEquals($event->date->getFrom(), "01/12/2015");
+        $this->assertEquals(count($event->extras), 1);
+        $this->assertEquals($event->extras[0], "9EM, 9A");
+        $this->assertEquals(count($event->times), 1);
+        $this->assertEquals($event->times[0], "18.00 Uhr");
+        $this->assertEquals(count($event->titles), 1);
+        $this->assertEquals($event->titles[0], "Informationsabend");
+    }
+
+     public function testGroupToEventMultipleDays() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "12.1. (Di)",
+                    "B" => "18.1",
+                    "C" => "   18.00 Uhr",
+                    "D" => "Informationsabend   "
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertFalse($event->date->isSingleDay());
+        $this->assertTrue($event->date->isMultipleDays());
+        $this->assertEquals($event->date->getFrom(), "01/12/2015");
+        $this->assertEquals($event->date->getTo(), "01/18/2015");
+
+
+        $this->assertEquals(count($event->extras), 0);
+        $this->assertEquals(count($event->times), 1);
+        $this->assertEquals($event->times[0], "18.00 Uhr");
+
+        $this->assertEquals(count($event->titles), 1);
+        $this->assertEquals($event->titles[0], "Informationsabend");
+    }
+
+    public function testGroupToEventMultipleDaysInFrom() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "12.1. (Di) bis 18.1",
+                    "B" => "    ",
+                    "C" => "   18.00 Uhr",
+                    "D" => "Informationsabend   "
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertFalse($event->date->isSingleDay());
+        $this->assertTrue($event->date->isMultipleDays());
+        $this->assertEquals($event->date->getFrom(), "01/12/2015");
+        $this->assertEquals($event->date->getTo(), "01/18/2015");
+
+
+        $this->assertEquals(count($event->extras), 0);
+        $this->assertEquals(count($event->times), 1);
+        $this->assertEquals($event->times[0], "18.00 Uhr");
+
+        $this->assertEquals(count($event->titles), 1);
+        $this->assertEquals($event->titles[0], "Informationsabend");
+    }
+
+    public function testGroupToEventMultipleLines() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "12.1. (Di)",
+                    "B" => "18.1",
+                    "C" => "   18.00 Uhr",
+                    "D" => "Informationsabend   "
+                ],
+                [
+                    "A" => "",
+                    "B" => "",
+                    "C" => "12.00 Uhr",
+                    "D" => "Wiederholung vom 1.1"
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertFalse($event->date->isSingleDay());
+        $this->assertTrue($event->date->isMultipleDays());
+        $this->assertEquals($event->date->getFrom(), "01/12/2015");
+        $this->assertEquals($event->date->getTo(), "01/18/2015");
+
+
+        $this->assertEquals(count($event->extras), 0);
+        $this->assertEquals(count($event->times), 2);
+        $this->assertEquals($event->times[0], "18.00 Uhr");
+        $this->assertEquals($event->times[1], "12.00 Uhr");
+
+        $this->assertEquals(count($event->titles), 2);
+        $this->assertEquals($event->titles[0], "Informationsabend");
+        $this->assertEquals($event->titles[1], "Wiederholung vom 1.1");
+    }
+
+    public function testGroupToEventMultipleLinesWithExtras() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "12.1. (Di) bis 18.1",
+                    "B" => "9A, 9EM",
+                    "C" => "   18.00 Uhr",
+                    "D" => "Informationsabend   "
+                ],
+                [
+                    "A" => "",
+                    "B" => "9N",
+                    "C" => "12.00 Uhr",
+                    "D" => "Wiederholung vom 1.1"
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertFalse($event->date->isSingleDay());
+        $this->assertTrue($event->date->isMultipleDays());
+        $this->assertEquals($event->date->getFrom(), "01/12/2015");
+        $this->assertEquals($event->date->getTo(), "01/18/2015");
+
+
+        $this->assertEquals(count($event->extras), 2);
+        $this->assertEquals($event->extras[0], "9A, 9EM");
+        $this->assertEquals($event->extras[1], "9N");
+
+        $this->assertEquals(count($event->times), 2);
+        $this->assertEquals($event->times[0], "18.00 Uhr");
+        $this->assertEquals($event->times[1], "12.00 Uhr");
+
+        $this->assertEquals(count($event->titles), 2);
+        $this->assertEquals($event->titles[0], "Informationsabend");
+        $this->assertEquals($event->titles[1], "Wiederholung vom 1.1");
+    }
+
+    public function testGetToYear() {
+        $this->assertEquals(2015, $this->reader->getToYear(["12"], ["12"], 2015));
+        $this->assertEquals(2015, $this->reader->getToYear(["11"], ["12"], 2015));
+        $this->assertEquals(2016, $this->reader->getToYear(["12"], ["1"], 2015));
+    }
+
+    public function testGroupToEventNewYear() {
+        $group = [
+            "year" => 2015,
+            "lines" => [
+                [
+                    "A" => "31.12. (Di)",
+                    "B" => "  4.1  ",
+                    "C" => "18.00 Uhr",
+                    "D" => "Informationsabend"
+                ]
+            ]
+        ];
+
+        $event = $this->reader->groupToEvent($group);
+        $this->assertTrue($event->date->isMultipleDays());
+        $this->assertEquals($event->date->getFrom(), "12/31/2015");
+        $this->assertEquals($event->date->getTo(), "01/04/2016");
+    }
+
 }

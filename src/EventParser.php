@@ -109,6 +109,10 @@ class EventParser {
         return $this->singlePool->applyRules($dateChunk);
     }
 
+    public function isSingleDay($dateChunk) {
+        return (bool) $this->singlePool->applyRules($dateChunk);
+    }
+
     public function getMultipleDays($dateChunk) {
         return $this->multiplePool->applyRules($dateChunk);
     }
@@ -175,10 +179,10 @@ class EventParser {
         return 1 == self::testD($dateChunk);
     }
 
-    public static function isSingleDay($dateChunk) {
-        return self::containsDMY($dateChunk) ||
-            self:: containsDM($dateChunk);
-    }
+    // public static function isSingleDay($dateChunk) {
+    //     return self::containsDMY($dateChunk) ||
+    //         self:: containsDM($dateChunk);
+    // }
 
 
 
