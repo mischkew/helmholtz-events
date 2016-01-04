@@ -19,7 +19,7 @@ class EventReader {
     public function cleanEvents($events) {
         // cutoff until first month is found
         $firstMonth = EventParser::findFirstMonth($events);
-        $currentLine = $events[0];
+        $currentLine = $events[array_keys($events)[0]];
 
         while ($currentLine["A"] != $firstMonth) {
             $currentLine = array_shift($events);
