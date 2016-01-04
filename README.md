@@ -2,7 +2,7 @@
 Reading events from an .xlsx-file for the webpage of Hermann-von-Helmholtz Gymnasium Potsdam (high school).
 www.helmholzschule.de
 
-** HEADS UP! **
+**HEADS UP!**
 You are the new or current webmaster at Helmholtzschule? You have found a bug, you want to change the specification or any other help?
 Please contact me and see [the development section](#development).
 
