@@ -27,6 +27,9 @@ git clone https://github.com/mischkew/helmholtz-events
 # and run composer
 cd helmholtz-events
 composer install
+
+# run tests with
+phpunit
 ```
 
 ## Usage
