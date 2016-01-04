@@ -4,7 +4,9 @@ www.helmholzschule.de
 
 ## Convert your .xlsx-files into Javascript. Yay!
 
-
+<img src="http://i.imgur.com/k5W0p7e.png" width="400">
+----->> 
+<img src="http://i.imgur.com/Z7MBpNx.png" width="400"> 
 
 ## Requirements
 
@@ -42,7 +44,7 @@ print "Written JS code into $exampleOutput.\n";
 
 ## Documentation
 
-**Events::exportEventsToJavascript($fileInput, $fileOutput**
+**Events::exportEventsToJavascript($fileInput, $fileOutput)**
 
 The only API you will need. Reads an excel file and transforms it into Helmholtzschool-specific javascript code.
 
@@ -55,3 +57,7 @@ You are a PHP-developer yourself? Feel free to add a pull request after...
 - providing an example `termine` file
  
 ... otherwise just add an issue or file a bug. I am happy to help :)
+
+## License
+
+MIT (c) 2016 - Sven Mischkewitz
