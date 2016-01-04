@@ -40,5 +40,6 @@ class Event {
 
     public function setDate(EventDate $date) {
         $this->date = $date;
+        return $this;
     }
 }
