@@ -17,6 +17,7 @@ Please contact me and see [the development section](#development).
 You will need 
 - PHP >= 5.5
 - composer (https://getcomposer.org/)
+- phpunit (optional; when running automated tests)
 
 ## Installation
 
