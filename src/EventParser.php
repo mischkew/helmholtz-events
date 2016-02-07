@@ -69,11 +69,11 @@ class EventParser {
             ],
             [
                 "/${D}\/${D}/",
-                function($m) { return [$m[1], $m[0], null]; }
+                function($m) { return [$m[0], $m[1], null]; }
             ],
             [
                 "/${D}\/${D}\/${Y}/",
-                function($m) { return [$m[1], $m[0], $m[2]]; }
+                function($m) { return [$m[0], $m[1], $m[2]]; }
             ],
         ];
     }
