@@ -21,9 +21,9 @@ class EventReader {
         $firstMonth = EventParser::findFirstMonth($events);
         $currentLine = $events[array_keys($events)[0]];
 
-        while ($currentLine["A"] != $firstMonth) {
+        do {
             $currentLine = array_shift($events);
-        }
+        } while ($currentLine["A"] != $firstMonth);
         array_unshift($events, $currentLine);
 
         // delete empty lines
