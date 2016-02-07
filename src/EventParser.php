@@ -13,6 +13,7 @@ class EventParser {
     ];
 
     public static $months = [
+        // German
         "Januar",
         "Februar",
         "März",
@@ -23,8 +24,22 @@ class EventParser {
         "August",
         "September",
         "Oktober",
-        "Novemeber",
-        "Dezember"
+        "November",
+        "Dezember",
+
+        // English
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
     ];
 
 
