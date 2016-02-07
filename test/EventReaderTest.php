@@ -41,21 +41,25 @@ class EventReaderTest extends PHPUnit_Framework_TestCase {
             ["A" => ""],
             ["A" => "wrong-date"],
             ["A" => "12.3.16", "B" => "info"],
-            ["A" => "Oktober 2016"]
+            ["A" => "Oktober 2016"],
+            ["A" => "1.10.", "B" => "info8"]
         ];
 
         $groups = $this->reader->groupEvents($events);
-        $this->assertEquals(count($groups), 4);
+        $this->assertEquals(count($groups), 5);
 
         $this->assertEquals($groups[0]["year"], 2015);
         $this->assertEquals($groups[1]["year"], 2015);
         $this->assertEquals($groups[2]["year"], 2016);
         $this->assertEquals($groups[3]["year"], 2016);
+        $this->assertEquals($groups[4]["year"], 2016);
+
 
         $this->assertEquals(count($groups[0]["lines"]), 1);
         $this->assertEquals(count($groups[1]["lines"]), 3);
         $this->assertEquals(count($groups[2]["lines"]), 1);
         $this->assertEquals(count($groups[3]["lines"]), 1);
+        $this->assertEquals(count($groups[4]["lines"]), 1);
     }
 
     public function testGroupToEventSingleDay() {

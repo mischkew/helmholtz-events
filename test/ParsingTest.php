@@ -15,6 +15,7 @@ class ParsingTest extends PHPUnit_Framework_TestCase {
 
     // test cases to detect whether a datestring shows from and to dates or only a single day
     public $stringHasMultipleDates = [
+        ["1.10.", false, null],
         ["1.2", false, null],
         ["1.2 oder", false, null],
         ["Bis 1.2", false, null],
